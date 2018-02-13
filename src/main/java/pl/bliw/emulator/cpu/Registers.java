@@ -4,6 +4,7 @@ import static pl.bliw.util.Binary.checkIfItIsUnsignedByteOrThrow;
 import static pl.bliw.util.Binary.checkIfItIsUnsignedWordOrThrow;
 
 public class Registers {
+
     private static final int NUM_OF_CPU_REGISTERS = 16;
     private int[] registers;
     private int I;
