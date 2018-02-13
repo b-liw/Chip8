@@ -18,13 +18,13 @@ public class Chip8MainConfiguration {
 
     @Bean
     @Scope("prototype")
-    Cpu cpu() {
+    public Cpu cpu() {
         return new Cpu(registers());
     }
 
     @Bean
     @Scope("prototype")
-    Registers registers() {
+    public Registers registers() {
         return new Registers();
     }
 
