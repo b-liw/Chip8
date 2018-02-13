@@ -16,7 +16,18 @@
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
         <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
+        <spring-context.version>5.0.3.RELEASE</spring-context.version>
     </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-context.version}</version>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <finalName>${project.name}</finalName>
