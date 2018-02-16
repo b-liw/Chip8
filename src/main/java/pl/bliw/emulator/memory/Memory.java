@@ -28,7 +28,7 @@ public class Memory {
                     "in memory");
         }
         for (byte nextByte : data) {
-            write(offset++, nextByte);
+            write(offset++, nextByte & 0xFF);
         }
     }
 
