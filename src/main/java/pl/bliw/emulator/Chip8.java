@@ -24,19 +24,29 @@ public class Chip8 implements Runnable {
         this.cpu = cpu;
         this.memory = memory;
         performanceCounter = new PerformanceCounter();
-        isRunning = true;
     }
 
     public void initialize() {
         double expectedFps = 60.0;
         long expectedDelay = (long) ((1 / expectedFps) * Constants.NANO_SECONDS_FACTOR);
-        threadExecutor = Executors.newScheduledThreadPool(1);
-        threadExecutor.scheduleAtFixedRate(this, 0, expectedDelay, TimeUnit.NANOSECONDS);
+        try {
+            threadExecutor = Executors.newScheduledThreadPool(1);
+            threadExecutor.scheduleAtFixedRate(this, 0, expectedDelay, TimeUnit.NANOSECONDS);
+            isRunning = true;
+            loadProgramIntoMemory("./pong.chip8");
+        } catch (Exception e) { // TOP EXCEPTION HANDLER, WHICH WILL SHUTDOWN EMULATOR AND SHOW CRASH LOG
+            // TODO log e
+            System.out.println("Critical error, shutting down the emulator");
+            e.printStackTrace();
+            shutDown();
+        }
     }
 
     public void shutDown() {
-        isRunning = false;
-        threadExecutor.shutdown();
+        if (isRunning) {
+            isRunning = false;
+            threadExecutor.shutdownNow();
+        }
     }
 
     @Override
@@ -51,5 +61,5 @@ public class Chip8 implements Runnable {
         byte[] rom = RomReader.readRomAsBytes(new File(path));
         memory.loadBytesIntoMemory(Constants.ROM_CODE_OFFSET, rom);
     }
-    
+
 }
