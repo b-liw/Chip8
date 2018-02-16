@@ -1,5 +1,7 @@
 package pl.bliw.emulator.cpu;
 
+import pl.bliw.util.Constants;
+
 import static pl.bliw.util.Binary.checkIfItIsUnsignedByteOrThrow;
 import static pl.bliw.util.Binary.checkIfItIsUnsignedWordOrThrow;
 
@@ -12,6 +14,7 @@ public class Registers {
 
     public Registers() {
         registers = new int[NUM_OF_CPU_REGISTERS];
+        PC = Constants.ROM_CODE_OFFSET;
     }
 
     public int get(AvailableRegisters register) {

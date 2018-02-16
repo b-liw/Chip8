@@ -11,6 +11,7 @@ import static pl.bliw.emulator.cpu.Registers.AvailableRegisters.values;
 
 public class RegistersTest {
 
+    private static final int ROM_CODE_OFFSET = 0x200;
     private Registers registers;
 
     @Before
@@ -19,14 +20,18 @@ public class RegistersTest {
     }
 
     @Test
-    public void allRegistersShouldHoldZeroAfterCreation() {
+    public void allRegistersExcludingPCShouldHoldZeroAfterCreation() {
         int expected = 0;
         for (AvailableRegisters registerID : values()) {
             int actual = registers.get(registerID);
             assertEquals(expected, actual);
         }
         assertEquals(expected, registers.getI());
-        assertEquals(expected, registers.getPC());
+    }
+
+    @Test
+    public void testIfPCstartsAtRomOffset() {
+        assertEquals(ROM_CODE_OFFSET, registers.getPC());
     }
 
     @Test
