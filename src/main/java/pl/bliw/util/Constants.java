@@ -32,4 +32,5 @@ public class Constants {
             };
     public static final int FONT_SET_OFFSET_IN_MEMORY = 0x50;
     public static final String MAIN_WINDOW_FXML_PATH = "/MainWindow.fxml";
+
 }

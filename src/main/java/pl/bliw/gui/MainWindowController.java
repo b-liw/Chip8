@@ -16,7 +16,6 @@ public class MainWindowController {
     @FXML
     private Canvas canvas;
 
-
     public MainWindowController(Chip8 chip8) {
         this.chip = chip8;
     }
@@ -24,7 +23,6 @@ public class MainWindowController {
     public void drawCanvas() {
 
     }
-
 
     @FXML
     public void initialize() {
