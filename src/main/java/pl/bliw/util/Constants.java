@@ -2,6 +2,9 @@ package pl.bliw.util;
 
 public class Constants {
 
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
+    public static final String WINDOW_TITLE = "CHIP8";
     public static final int ROM_CODE_OFFSET = 0x200;
     public static final double MILI_SECONDS_FACTOR = Math.pow(10, 3);
     public static final double NANO_SECONDS_FACTOR = Math.pow(10, 9);
@@ -28,4 +31,5 @@ public class Constants {
                     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
             };
     public static final int FONT_SET_OFFSET_IN_MEMORY = 0x50;
+    public static final String MAIN_WINDOW_FXML_PATH = "/MainWindow.fxml";
 }
