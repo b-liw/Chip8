@@ -21,6 +21,24 @@ public class Registers {
         return registers[register.id] & 0xFF;
     }
 
+    public int get(int index) {
+        return registers[index] & 0xFF;
+    }
+
+    public void set(AvailableRegisters register, int value) {
+        checkIfItIsUnsignedByteOrThrow(String.format("V%d", register.id), value);
+        registers[register.id] = value;
+    }
+
+    public void set(int index, int value) {
+        try {
+            checkIfItIsUnsignedByteOrThrow(String.format("V%d", index), value);
+            registers[index] = value;
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Incorrect register index");
+        }
+    }
+
     public int getI() {
         return I & 0xFFFF;
     }
@@ -39,9 +57,8 @@ public class Registers {
         this.PC = PC;
     }
 
-    public void set(AvailableRegisters register, int value) {
-        checkIfItIsUnsignedByteOrThrow(String.format("V%d", register.id), value);
-        registers[register.id] = value;
+    public void incrementPCByLengthOfOpcode() {
+        this.PC += 2;
     }
 
     public enum AvailableRegisters {
