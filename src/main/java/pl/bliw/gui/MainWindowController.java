@@ -1,5 +1,6 @@
 package pl.bliw.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,6 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import pl.bliw.emulator.Chip8;
 import pl.bliw.emulator.io.Screen;
 import pl.bliw.util.Constants;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainWindowController {
 
@@ -39,7 +43,13 @@ public class MainWindowController {
     public void initialize() {
         gc = canvas.getGraphicsContext2D();
         chip.initialize(Constants.PONG_CHIP_8_DEFAULT_ROM_PATH);
-        drawCanvas();
+        long delay = ((long) (Constants.EXPECTED_DELAY_IN_NANO_SECONDS / Constants.NANO_SECONDS_FACTOR * Constants.MILI_SECONDS_FACTOR));
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> drawCanvas());
+            }
+        }, 1, delay);
     }
 
 }
