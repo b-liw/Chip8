@@ -1,5 +1,7 @@
 package pl.bliw.emulator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import pl.bliw.emulator.cpu.Cpu;
 import pl.bliw.emulator.memory.Memory;
 import pl.bliw.util.Constants;
@@ -14,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Chip8 implements Runnable {
 
+    private static Log log = LogFactory.getLog(Chip8.class);
     private Cpu cpu;
     private Memory memory;
     private boolean isRunning;
@@ -26,18 +29,16 @@ public class Chip8 implements Runnable {
         performanceCounter = new PerformanceCounter();
     }
 
-    public void initialize() {
-        double expectedFps = 60.0;
-        long expectedDelay = (long) ((1 / expectedFps) * Constants.NANO_SECONDS_FACTOR);
+    public void initialize(String romPath) {
         try {
             threadExecutor = Executors.newScheduledThreadPool(1);
-            threadExecutor.scheduleAtFixedRate(this, 0, expectedDelay, TimeUnit.NANOSECONDS);
+            threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY, TimeUnit.NANOSECONDS);
+            loadProgramIntoMemory(romPath);
             isRunning = true;
-            loadProgramIntoMemory("./pong.chip8");
+        } catch (IOException e) {
+            log.error(String.format("Specified path: %s doesn't contain valid ROM file", romPath), e);
         } catch (Exception e) { // TOP EXCEPTION HANDLER, WHICH WILL SHUTDOWN EMULATOR AND SHOW CRASH LOG
-            // TODO log e
-            System.out.println("Critical error, shutting down the emulator");
-            e.printStackTrace();
+            log.fatal("Critical error, shutting down the emulator", e);
             shutDown();
         }
     }
@@ -53,7 +54,7 @@ public class Chip8 implements Runnable {
     public void run() {
         cpu.run();
         performanceCounter.count();
-        System.out.printf("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS());
+        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
     }
 
 
