@@ -57,8 +57,8 @@ public class Registers {
         this.PC = PC;
     }
 
-    public void incrementPCByLengthOfOpcode() {
-        this.PC += 2;
+    public void incrementPC(int value) {
+        this.PC += value;
     }
 
     public enum AvailableRegisters {
