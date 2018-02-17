@@ -22,13 +22,23 @@ public class Memory {
         return (short) (memory[offset] & 0xFF);
     }
 
-    public void loadBytesIntoMemory(int offset, byte[] data) throws IllegalArgumentException {
+    public void loadSequenceIntoMemory(int offset, byte[] data) throws IllegalArgumentException {
         if (offset + data.length > DEFAULT_MEMORY_SIZE) {
             throw new IllegalArgumentException("There is no enough space for given data starting from given offset " +
                     "in memory");
         }
         for (byte nextByte : data) {
             write(offset++, nextByte & 0xFF);
+        }
+    }
+
+    public void loadSequenceIntoMemory(int offset, char[] data) throws IllegalArgumentException {
+        if (offset + data.length > DEFAULT_MEMORY_SIZE) {
+            throw new IllegalArgumentException("There is no enough space for given data starting from given offset " +
+                    "in memory");
+        }
+        for (char nextChar : data) {
+            write(offset++, nextChar & 0xFF);
         }
     }
 
