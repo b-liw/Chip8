@@ -2,8 +2,9 @@ package pl.bliw.util;
 
 public class Constants {
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int SCALE = 15;
+    public static final int WIDTH = 64 * SCALE;
+    public static final int HEIGHT = 32 * SCALE;
     public static final String WINDOW_TITLE = "CHIP8";
     public static final int ROM_CODE_OFFSET = 0x200;
     public static final double MILI_SECONDS_FACTOR = Math.pow(10, 3);
