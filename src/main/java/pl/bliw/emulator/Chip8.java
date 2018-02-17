@@ -37,7 +37,7 @@ public class Chip8 implements Runnable {
             loadProgramIntoMemory(romPath);
             loadFontset();
             threadExecutor = Executors.newScheduledThreadPool(1);
-            threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY, TimeUnit.NANOSECONDS);
+            threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY_IN_NANO_SECONDS, TimeUnit.NANOSECONDS);
         } catch (IOException e) {
             log.error(String.format("Specified path: %s doesn't contain valid ROM file", romPath), e);
         } catch (Exception e) { // TOP EXCEPTION HANDLER, WHICH WILL SHUTDOWN EMULATOR AND SHOW CRASH LOG
