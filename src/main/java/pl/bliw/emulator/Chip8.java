@@ -33,6 +33,7 @@ public class Chip8 implements Runnable {
     public void initialize(String romPath) {
         try {
             loadProgramIntoMemory(romPath);
+            loadFontset();
             threadExecutor = Executors.newScheduledThreadPool(1);
             ScheduledFuture scheduledFuture = threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY, TimeUnit.NANOSECONDS);
             scheduledFuture.get();
@@ -59,7 +60,11 @@ public class Chip8 implements Runnable {
 
     public void loadProgramIntoMemory(String path) throws IOException {
         byte[] rom = RomReader.readRomAsBytes(new File(path));
-        memory.loadBytesIntoMemory(Constants.ROM_CODE_OFFSET, rom);
+        memory.loadSequenceIntoMemory(Constants.ROM_CODE_OFFSET, rom);
+    }
+
+    public void loadFontset() {
+        memory.loadSequenceIntoMemory(Constants.FONT_SET_OFFSET_IN_MEMORY, Constants.CHIP8_FONTSET);
     }
 
 }

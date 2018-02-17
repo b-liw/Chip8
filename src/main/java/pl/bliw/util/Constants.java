@@ -27,5 +27,5 @@ public class Constants {
                     0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
                     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
             };
-
+    public static final int FONT_SET_OFFSET_IN_MEMORY = 0x50;
 }
