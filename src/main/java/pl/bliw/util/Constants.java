@@ -10,7 +10,7 @@ public class Constants {
     public static final double MILI_SECONDS_FACTOR = Math.pow(10, 3);
     public static final double NANO_SECONDS_FACTOR = Math.pow(10, 9);
     public static final String PONG_CHIP_8_DEFAULT_ROM_PATH = "./pong.chip8";
-    public static final double EXPECTED_FPS = 60.0;
+    public static final double EXPECTED_FPS = 120.0;
     public static final long EXPECTED_DELAY_IN_NANO_SECONDS = (long) ((1 / EXPECTED_FPS) * NANO_SECONDS_FACTOR);
     public static final char CHIP8_FONTSET[] =
             {
@@ -33,5 +33,6 @@ public class Constants {
             };
     public static final int FONT_SET_OFFSET_IN_MEMORY = 0x50;
     public static final String MAIN_WINDOW_FXML_PATH = "/MainWindow.fxml";
-
+    public static final int BITS_IN_BYTE = 8;
+    public static final int DEFAULT_OPCODE_LENGTH = 2;
 }
