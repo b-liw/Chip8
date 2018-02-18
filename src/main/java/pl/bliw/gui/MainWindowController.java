@@ -43,7 +43,9 @@ public class MainWindowController {
     @FXML
     public void initialize() {
         gc = canvas.getGraphicsContext2D();
-        chip.initialize(Constants.PONG_CHIP_8_DEFAULT_ROM_PATH);
+        new Thread(() -> {
+            chip.initialize(Constants.PONG_CHIP_8_DEFAULT_ROM_PATH);
+        }).start();
         long delay = ((long) (Constants.EXPECTED_DELAY_IN_NANO_SECONDS / Constants.NANO_SECONDS_FACTOR * Constants.MILI_SECONDS_FACTOR));
         new Timer().schedule(new TimerTask() {
             @Override
@@ -53,7 +55,7 @@ public class MainWindowController {
         }, 1, delay);
         canvas.requestFocus();
     }
-    
+
     @FXML
     private void keyPressedListener(KeyEvent event) {
         chip.getKeyboard().keyPressed(event.getCode().getName());
