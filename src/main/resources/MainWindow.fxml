@@ -2,7 +2,8 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainContent" maxHeight="480" maxWidth="960" minHeight="480"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainContent" onKeyPressed="#keyPressedListener"
+            onKeyReleased="#keyReleasedListener" maxHeight="480" maxWidth="960" minHeight="480"
             minWidth="960" xmlns="http://javafx.com/javafx/2.2" fx:controller="pl.bliw.gui.MainWindowController">
     <Canvas fx:id="canvas" height="480" width="960"></Canvas>
 </AnchorPane>

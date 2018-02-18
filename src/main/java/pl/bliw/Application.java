@@ -32,6 +32,7 @@ public class Application extends javafx.application.Application {
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root, Constants.WIDTH, Constants.HEIGHT);
+            scene.getRoot().requestFocus();
             stage.setScene(scene);
             stage.setTitle(Constants.WINDOW_TITLE);
             stage.setResizable(false);

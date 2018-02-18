@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,6 +51,17 @@ public class MainWindowController {
                 Platform.runLater(() -> drawCanvas());
             }
         }, 1, delay);
+        canvas.requestFocus();
+    }
+    
+    @FXML
+    private void keyPressedListener(KeyEvent event) {
+        chip.getKeyboard().keyPressed(event.getCode().getName());
+    }
+
+    @FXML
+    private void keyReleasedListener(KeyEvent event) {
+        chip.getKeyboard().keyReleased(event.getCode().getName());
     }
 
 }
