@@ -35,7 +35,7 @@ public class Chip8 implements Runnable {
         this.screen = screen;
         this.keyboard = keyboard;
         this.performanceCounter = performanceCounter;
-        this.timers = new Timers();
+        this.timers = timers;
     }
 
     public void initialize(String romPath) {
