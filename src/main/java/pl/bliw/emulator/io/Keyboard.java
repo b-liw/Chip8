@@ -45,4 +45,7 @@ public class Keyboard {
         keyCodeMap.put("V", 0xf);
     }
 
+    public boolean isPressed(int keyID) {
+        return keys[keyID];
+    }
 }
