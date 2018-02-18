@@ -6,23 +6,35 @@ import org.springframework.context.annotation.Lazy;
 import pl.bliw.emulator.Chip8;
 import pl.bliw.emulator.cpu.Cpu;
 import pl.bliw.emulator.cpu.Registers;
+import pl.bliw.emulator.cpu.Timers;
 import pl.bliw.emulator.io.Keyboard;
 import pl.bliw.emulator.io.Screen;
 import pl.bliw.emulator.memory.Memory;
 import pl.bliw.emulator.memory.StackMemory;
 import pl.bliw.gui.MainWindowController;
+import pl.bliw.util.PerformanceCounter;
 
 @Configuration
 public class Chip8MainConfiguration {
 
     @Bean
     public Chip8 chip8() {
-        return new Chip8(cpu(), memory(), screen(), keyboard());
+        return new Chip8(cpu(), memory(), screen(), keyboard(), timers(), performanceCounter());
+    }
+
+    @Bean
+    public PerformanceCounter performanceCounter() {
+        return new PerformanceCounter();
     }
 
     @Bean
     public Cpu cpu() {
-        return new Cpu(registers(), memory(), stackMemory(), screen());
+        return new Cpu(registers(), memory(), stackMemory(), screen(), timers(), keyboard());
+    }
+
+    @Bean
+    public Timers timers() {
+        return new Timers();
     }
 
     @Bean
