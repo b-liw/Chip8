@@ -3,6 +3,8 @@ package pl.bliw.emulator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import pl.bliw.emulator.cpu.Cpu;
+import pl.bliw.emulator.cpu.Timers;
+import pl.bliw.emulator.io.Keyboard;
 import pl.bliw.emulator.io.Screen;
 import pl.bliw.emulator.memory.Memory;
 import pl.bliw.util.Constants;
@@ -24,12 +26,16 @@ public class Chip8 implements Runnable {
     private ScheduledExecutorService threadExecutor;
     private PerformanceCounter performanceCounter;
     private Screen screen;
+    private Keyboard keyboard;
+    private Timers timers;
 
-    public Chip8(Cpu cpu, Memory memory, Screen screen) {
+    public Chip8(Cpu cpu, Memory memory, Screen screen, Keyboard keyboard, Timers timers, PerformanceCounter performanceCounter) {
         this.cpu = cpu;
         this.memory = memory;
         this.screen = screen;
-        performanceCounter = new PerformanceCounter();
+        this.keyboard = keyboard;
+        this.performanceCounter = performanceCounter;
+        this.timers = new Timers();
     }
 
     public void initialize(String romPath) {
@@ -37,10 +43,11 @@ public class Chip8 implements Runnable {
             loadProgramIntoMemory(romPath);
             loadFontset();
             threadExecutor = Executors.newScheduledThreadPool(1);
-            threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY_IN_NANO_SECONDS, TimeUnit.NANOSECONDS);
+            threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY_IN_NANO_SECONDS, TimeUnit.NANOSECONDS).get();
         } catch (IOException e) {
             log.error(String.format("Specified path: %s doesn't contain valid ROM file", romPath), e);
         } catch (Exception e) { // TOP EXCEPTION HANDLER, WHICH WILL SHUTDOWN EMULATOR AND SHOW CRASH LOG
+            log.fatal(e.getMessage());
             log.fatal("Critical error, shutting down the emulator", e);
             shutDown();
         }
@@ -53,15 +60,13 @@ public class Chip8 implements Runnable {
 
     @Override
     public void run() {
-        try {
             cpu.run();
             performanceCounter.count();
+        timers.incrementDelayTimer();
+        timers.incrementSoundTimer();
 //        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
-        } catch (Throwable t) {
-            throw t; // Because of issues with ScheduledExecutorService exceptions
-        }
-    }
 
+    }
 
     public void loadProgramIntoMemory(String path) throws IOException {
         byte[] rom = RomReader.readRomAsBytes(new File(path));
@@ -74,6 +79,14 @@ public class Chip8 implements Runnable {
 
     public Screen getScreen() {
         return screen;
+    }
+
+    public Memory getMemory() {
+        return memory;
+    }
+
+    public Keyboard getKeyboard() {
+        return keyboard;
     }
 
 }
