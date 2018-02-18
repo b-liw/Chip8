@@ -54,14 +54,14 @@ public class Chip8 implements Runnable {
     }
 
     public void shutDown() {
-            isRunning = false;
-            threadExecutor.shutdownNow();
+        isRunning = false;
+        threadExecutor.shutdownNow();
     }
 
     @Override
     public void run() {
-            cpu.run();
-            performanceCounter.count();
+        cpu.run();
+        performanceCounter.count();
         timers.incrementDelayTimer();
         timers.incrementSoundTimer();
 //        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
