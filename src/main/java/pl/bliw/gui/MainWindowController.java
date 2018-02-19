@@ -9,8 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import pl.bliw.emulator.Chip8;
 import pl.bliw.emulator.io.Screen;
 import pl.bliw.util.Constants;
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainWindowController {
 
-    private static Log log = LogFactory.getLog(MainWindowController.class);
+    private static Logger log = Logger.getLogger(MainWindowController.class.getName());
     private Chip8 chip;
     private GraphicsContext gc;
     private ScheduledExecutorService threadExecutor;

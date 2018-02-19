@@ -1,7 +1,7 @@
 package pl.bliw.emulator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.log4j.Logger;
 import pl.bliw.emulator.cpu.Cpu;
 import pl.bliw.emulator.cpu.Timers;
 import pl.bliw.emulator.io.Keyboard;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class Chip8 {
 
-    private static Log log = LogFactory.getLog(Chip8.class);
+    private static Logger log = Logger.getLogger(Chip8.class.getName());
     private Cpu cpu;
     private Memory memory;
     private boolean isRunning;

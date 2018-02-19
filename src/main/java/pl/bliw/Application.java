@@ -5,8 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -17,7 +16,7 @@ import java.io.IOException;
 
 public class Application extends javafx.application.Application {
 
-    private static Log log = LogFactory.getLog(Application.class);
+    private static Logger log = Logger.getLogger(Application.class.getName());
 
     public static void main(String[] args) {
         log.info("JavaFX is starting");

@@ -1,7 +1,6 @@
 package pl.bliw.emulator.cpu;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import pl.bliw.emulator.io.Keyboard;
 import pl.bliw.emulator.io.Screen;
 import pl.bliw.emulator.memory.Memory;
@@ -17,7 +16,7 @@ import static pl.bliw.util.Constants.DEFAULT_OPCODE_LENGTH;
 
 public class Cpu {
 
-    private static Log log = LogFactory.getLog(Cpu.class);
+    private static Logger log = Logger.getLogger(Cpu.class.getName());
     private Registers registers;
     private Memory memory;
     private StackMemory stackMemory;
