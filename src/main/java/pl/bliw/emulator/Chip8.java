@@ -14,17 +14,14 @@ import pl.bliw.util.RomReader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-public class Chip8 implements Runnable {
+
+public class Chip8 {
 
     private static Log log = LogFactory.getLog(Chip8.class);
     private Cpu cpu;
     private Memory memory;
     private boolean isRunning;
-    private ScheduledExecutorService threadExecutor;
     private PerformanceCounter performanceCounter;
     private Screen screen;
     private Keyboard keyboard;
@@ -41,37 +38,27 @@ public class Chip8 implements Runnable {
         this.sound = sound;
     }
 
-    public void initialize(String romPath) {
-        try {
-            isRunning = true;
-            loadProgramIntoMemory(romPath);
-            loadFontset();
-            threadExecutor = Executors.newScheduledThreadPool(1);
-            threadExecutor.scheduleAtFixedRate(this, 0, Constants.EXPECTED_DELAY_IN_NANO_SECONDS, TimeUnit.NANOSECONDS).get();
-        } catch (IOException e) {
-            log.error(String.format("Specified path: %s doesn't contain valid ROM file", romPath), e);
-        } catch (Exception e) { // TOP EXCEPTION HANDLER, WHICH WILL SHUTDOWN EMULATOR AND SHOW CRASH LOG
-            log.fatal(e.getMessage());
-            log.fatal("Critical error, shutting down the emulator", e);
-            shutDown();
-        }
+    public void initialize(String romPath) throws IOException {
+        loadProgramIntoMemory(romPath);
+        loadFontset();
+        isRunning = true;
     }
 
     public void shutDown() {
         isRunning = false;
-        threadExecutor.shutdownNow();
     }
 
-    @Override
     public void run() {
-        cpu.run();
-        performanceCounter.count();
-        timers.decrementSoundTimer();
-        timers.decrementDelayTimer();
-        if (timers.getSoundTimer() > 0) {
-            sound.beep();
+        if (isRunning) {
+            cpu.run();
+            performanceCounter.count();
+            timers.decrementSoundTimer();
+            timers.decrementDelayTimer();
+            if (timers.getSoundTimer() > 0) {
+                sound.beep();
+            }
+//            log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
         }
-//        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
     }
 
     public void loadProgramIntoMemory(String path) throws IOException {
