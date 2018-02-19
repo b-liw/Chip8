@@ -35,4 +35,5 @@ public class Constants {
     public static final String MAIN_WINDOW_FXML_PATH = "/MainWindow.fxml";
     public static final int BITS_IN_BYTE = 8;
     public static final int DEFAULT_OPCODE_LENGTH = 2;
+    public static final String BEEP_SOUND_PATH = "/beep-08b.wav";
 }
