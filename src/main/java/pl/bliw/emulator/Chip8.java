@@ -62,8 +62,8 @@ public class Chip8 implements Runnable {
     public void run() {
         cpu.run();
         performanceCounter.count();
-        timers.incrementDelayTimer();
-        timers.incrementSoundTimer();
+        timers.decrementDelayTimer();
+        timers.decrementSoundTimer();
 //        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
 
     }
