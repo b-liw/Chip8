@@ -37,4 +37,5 @@ public class Constants {
     public static final int BITS_IN_BYTE = 8;
     public static final int DEFAULT_OPCODE_LENGTH = 2;
     public static final String BEEP_SOUND_PATH = "/beep-08b.wav";
+    public static final String ERROR_INFO = "ERROR";
 }
