@@ -45,7 +45,23 @@ public class Cpu {
     }
 
     private Operation decode(char opcode) {
+        /**
+         * // https://en.wikipedia.org/wiki/CHIP-8#Opcode_table
+         * NNN: address
+         * NN: 8-bit constant
+         * N: 4-bit constant
+         * X and Y: 4-bit register identifier
+         * PC : Program Counter
+         * I : 16bit register (For memory address)
+         */
         log.info(Integer.toHexString(opcode).toUpperCase());
+        int x = extract0X00(opcode);
+        int y = extract00Y0(opcode);
+        int vx = registers.get(x);
+        int vy = registers.get(y);
+        int n = extract000N(opcode);
+        int nn = extract00NN(opcode);
+        int nnn = extract0NNN(opcode);
         try {
             switch (getInstructionID(opcode)) {
                 case 0x0000:
@@ -65,37 +81,31 @@ public class Cpu {
                     }
                 case 0x1000:
                     return () -> {
-                        int addressToJump = extract0NNN(opcode);
-                        registers.setPC(addressToJump);
+                        registers.setPC(nnn);
                     };
                 case 0x2000:
                     return () -> {
-                        int address = extract0NNN(opcode);
                         stackMemory.push(registers.getPC() + Constants.DEFAULT_OPCODE_LENGTH);
-                        registers.setPC(address);
+                        registers.setPC(nnn);
                     };
                 case 0x3000:
                     return () -> {
-                        if (registers.get(extract0X00(opcode)) == extract00NN(opcode)) {
-                            registers.incrementPC(4); // if vx == NN then skip 4 bytes
+                        if (vx == nn) {
+                            registers.incrementPC(DEFAULT_OPCODE_LENGTH * 2); // if vx == NN then skip 4 bytes
                         } else {
                             registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                         }
                     };
                 case 0x4000:
                     return () -> {
-                        if (registers.get(extract0X00(opcode)) != extract00NN(opcode)) {
-                            registers.incrementPC(4); // if vx != NN then skip 4 bytes
+                        if (vx != nn) {
+                            registers.incrementPC(DEFAULT_OPCODE_LENGTH * 2); // if vx != NN then skip 4 bytes
                         } else {
                             registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                         }
                     };
                 case 0x5000:
                     return () -> {
-                        int x = extract0X00(opcode);
-                        int y = extract00Y0(opcode);
-                        int vx = registers.get(x);
-                        int vy = registers.get(y);
                         if (vx == vy) {
                             registers.incrementPC(DEFAULT_OPCODE_LENGTH * 2);
                         } else {
@@ -104,58 +114,38 @@ public class Cpu {
                     };
                 case 0x6000:
                     return () -> {
-                        int registerIndex = extract0X00(opcode);
-                        registers.set(registerIndex, extract00NN(opcode));
+                        registers.set(x, nn);
                         registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                     };
                 case 0x7000:
                     return () -> {
-                        int value = extract00NN(opcode);
-                        int registerIndex = extract0X00(opcode);
-                        registers.set(registerIndex, (registers.get(registerIndex) + value) & 0xFF);
+                        registers.set(x, (registers.get(x) + nn) & 0xFF);
                         registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                     };
                 case 0x8000:
                     switch (extract000N(opcode)) {
                         case 0x0000:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int y = extract00Y0(opcode);
                                 registers.set(x, registers.get(y));
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0001:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int y = extract00Y0(opcode);
-                                int vx = registers.get(x);
-                                int vy = registers.get(y);
                                 registers.set(x, vx | vy);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0002:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int y = extract00Y0(opcode);
-                                int vx = registers.get(x);
-                                int vy = registers.get(y);
                                 registers.set(x, vx & vy);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0003:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int y = extract00Y0(opcode);
-                                int vx = registers.get(x);
-                                int vy = registers.get(y);
                                 registers.set(x, vx ^ vy);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0004:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int vx = registers.get(extract0X00(opcode));
-                                int vy = registers.get(extract00Y0(opcode));
                                 int result = vx + vy;
                                 if (result > 255) {
                                     registers.set(VF, 1);
@@ -167,9 +157,6 @@ public class Cpu {
                             };
                         case 0x0005:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int vx = registers.get(extract0X00(opcode));
-                                int vy = registers.get(extract00Y0(opcode));
                                 int result = vx - vy;
                                 if (result > 0) {
                                     registers.set(VF, 1);
@@ -181,17 +168,12 @@ public class Cpu {
                             };
                         case 0x0006:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int vx = registers.get(x);
                                 registers.set(VF, vx & 1);
                                 registers.set(x, vx >> 1);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0007:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int vx = registers.get(extract0X00(opcode));
-                                int vy = registers.get(extract00Y0(opcode));
                                 int result = vy - vx;
                                 if (result <= 0) {
                                     registers.set(VF, 0);
@@ -203,8 +185,6 @@ public class Cpu {
                             };
                         case 0x000e:
                             return () -> {
-                                int x = extract0X00(opcode);
-                                int vx = registers.get(x);
                                 registers.set(VF, (vx >> 7) & 1);
                                 registers.set(x, vx << 1);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
@@ -214,10 +194,6 @@ public class Cpu {
                     }
                 case 0x9000:
                     return () -> {
-                        int x = extract0X00(opcode);
-                        int y = extract00Y0(opcode);
-                        int vx = registers.get(x);
-                        int vy = registers.get(y);
                         if (vx != vy) {
                             registers.incrementPC(DEFAULT_OPCODE_LENGTH * 2);
                         } else {
@@ -226,28 +202,25 @@ public class Cpu {
                     };
                 case 0xa000:
                     return () -> {
-                        registers.setI(extract0NNN(opcode));
+                        registers.setI(nnn);
                         registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                     };
                 case 0xb000:
                     return () -> {
-                        int nnn = extract0NNN(opcode);
                         registers.setPC(nnn + registers.get(V0));
                     };
                 case 0xc000:
                     return () -> {
-                        int registerIndex = extract0X00(opcode);
-                        int secondValue = extract0NNN(opcode);
-                        int randomValue = (new Random().nextInt(256)) & secondValue;
-                        registers.set(registerIndex, randomValue);
+                        int randomValue = (new Random().nextInt(256)) & nnn;
+                        registers.set(x, randomValue);
                         registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                     };
                 case 0xd000:
                     return () -> {
                         registers.set(VF, 0);
-                        int xSpriteCoord = registers.get(extract0X00(opcode));
-                        int ySpriteCoord = registers.get(extract00Y0(opcode));
-                        int heightOfSprite = extract000N(opcode);
+                        int xSpriteCoord = vx;
+                        int ySpriteCoord = vy;
+                        int heightOfSprite = n;
                         for (int yOffset = 0; yOffset < heightOfSprite; yOffset++) {
                             int currentLineOfSprite = memory.read(registers.getI() + yOffset);
                             for (int xOffset = 0; xOffset < BITS_IN_BYTE; xOffset++) {
@@ -270,7 +243,7 @@ public class Cpu {
                     switch (extract00NN(opcode)) {
                         case 0x009e:
                             return () -> {
-                                if (keyboard.isPressed(registers.get(extract0X00(opcode)))) {
+                                if (keyboard.isPressed(vx)) {
                                     registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH * 2);
                                 } else {
                                     registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
@@ -278,7 +251,7 @@ public class Cpu {
                             };
                         case 0x00a1:
                             return () -> {
-                                if (!keyboard.isPressed(registers.get(extract0X00(opcode)))) {
+                                if (!keyboard.isPressed(vx)) {
                                     registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH * 2);
                                 } else {
                                     registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
@@ -292,7 +265,7 @@ public class Cpu {
                     switch (extract00NN(opcode)) {
                         case 0x0007:
                             return () -> {
-                                registers.set(extract0X00(opcode), timers.getDelayTimer());
+                                registers.set(x, timers.getDelayTimer());
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x000a:
@@ -300,7 +273,7 @@ public class Cpu {
                                 boolean[] keys = keyboard.getKeys();
                                 for (int i = 0; i < keys.length; i++) {
                                     if (keys[i]) {
-                                        registers.set(extract0X00(opcode), i);
+                                        registers.set(x, i);
                                         registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                                         break;
                                     }
@@ -308,29 +281,26 @@ public class Cpu {
                             };
                         case 0x0015:
                             return () -> {
-                                timers.setDelayTimer(registers.get(extract0X00(opcode)));
+                                timers.setDelayTimer(registers.get(x));
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0018:
                             return () -> {
-                                timers.setSoundTimer(registers.get(extract0X00(opcode)));
+                                timers.setSoundTimer(registers.get(x));
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x001e:
                             return () -> {
-                                int x = extract0X00(opcode);
                                 registers.setI(registers.getI() + registers.get(x));
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0029:
                             return () -> {
-                                int vx = registers.get(extract0X00(opcode));
                                 registers.setI(Constants.FONT_SET_OFFSET_IN_MEMORY + vx * 5);
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0033:
                             return () -> {
-                                int vx = registers.get(extract0X00(opcode));
                                 memory.write(registers.getI() + 2, vx % 10); // BCD code
                                 memory.write(registers.getI() + 1, (vx / 10) % 10);
                                 memory.write(registers.getI(), (vx / 100) % 10);
@@ -338,7 +308,6 @@ public class Cpu {
                             };
                         case 0x0055: {
                             return () -> {
-                                int x = extract0X00(opcode);
                                 for (int i = 0; i <= x; i++) {
                                     memory.write(registers.getI() + i, registers.get(i));
                                 }
@@ -348,7 +317,6 @@ public class Cpu {
                         }
                         case 0x0065:
                             return () -> {
-                                int x = extract0X00(opcode);
                                 for (int i = 0; i <= x; i++) {
                                     registers.set(i, memory.read(registers.getI() + i));
                                 }
