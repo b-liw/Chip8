@@ -25,6 +25,10 @@ public class Keyboard {
         }
     }
 
+    public boolean[] getKeys() {
+        return keys;
+    }
+
     private void initializeKeyCodeMap() {
         // https://cdn.hackaday.io/images/5663601486879354232.png
         keyCodeMap.put("1", 1);
