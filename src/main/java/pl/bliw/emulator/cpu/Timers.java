@@ -9,24 +9,16 @@ public class Timers {
         return delayTimer;
     }
 
-    public void setDelayTimer(int value) {
-        this.delayTimer = delayTimer;
-    }
-
     public int getSoundTimer() {
         return soundTimer;
     }
 
+    public void setDelayTimer(int value) {
+        this.delayTimer = delayTimer;
+    }
+
     public void setSoundTimer(int value) {
         this.soundTimer = soundTimer;
-    }
-
-    public void incrementDelayTimer() {
-        this.delayTimer++;
-    }
-
-    public void incrementSoundTimer() {
-        this.soundTimer++;
     }
 
     public void decrementSoundTimer() {
