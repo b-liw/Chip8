@@ -28,6 +28,12 @@ public class Screen {
         return screenState;
     }
 
+    public void clear() {
+        for (int i = 0; i < screenState.length; i++) {
+            screenState[i] = false;
+        }
+    }
+
     private void checkBounds(int offset) throws IllegalArgumentException {
         if (offset < 0 || offset >= WIDTH * HEIGHT) {
             throw new IllegalArgumentException("Invalid offset in screen buffer");
