@@ -263,6 +263,7 @@ public class Cpu {
                                 }
                             }
                         }
+                        screen.setCanvasUpdated(true);
                         registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                     };
                 case 0xe000: {
