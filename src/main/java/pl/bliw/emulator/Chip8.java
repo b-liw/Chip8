@@ -6,6 +6,7 @@ import pl.bliw.emulator.cpu.Cpu;
 import pl.bliw.emulator.cpu.Timers;
 import pl.bliw.emulator.io.Keyboard;
 import pl.bliw.emulator.io.Screen;
+import pl.bliw.emulator.io.Sound;
 import pl.bliw.emulator.memory.Memory;
 import pl.bliw.util.Constants;
 import pl.bliw.util.PerformanceCounter;
@@ -28,14 +29,16 @@ public class Chip8 implements Runnable {
     private Screen screen;
     private Keyboard keyboard;
     private Timers timers;
+    private Sound sound;
 
-    public Chip8(Cpu cpu, Memory memory, Screen screen, Keyboard keyboard, Timers timers, PerformanceCounter performanceCounter) {
+    public Chip8(Cpu cpu, Memory memory, Screen screen, Keyboard keyboard, Timers timers, PerformanceCounter performanceCounter, Sound sound) {
         this.cpu = cpu;
         this.memory = memory;
         this.screen = screen;
         this.keyboard = keyboard;
         this.performanceCounter = performanceCounter;
         this.timers = timers;
+        this.sound = sound;
     }
 
     public void initialize(String romPath) {
@@ -62,8 +65,11 @@ public class Chip8 implements Runnable {
     public void run() {
         cpu.run();
         performanceCounter.count();
-        timers.decrementDelayTimer();
         timers.decrementSoundTimer();
+        timers.decrementDelayTimer();
+        if (timers.getSoundTimer() > 0) {
+            sound.beep();
+        }
 //        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
 
     }

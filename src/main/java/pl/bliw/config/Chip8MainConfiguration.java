@@ -9,6 +9,7 @@ import pl.bliw.emulator.cpu.Registers;
 import pl.bliw.emulator.cpu.Timers;
 import pl.bliw.emulator.io.Keyboard;
 import pl.bliw.emulator.io.Screen;
+import pl.bliw.emulator.io.Sound;
 import pl.bliw.emulator.memory.Memory;
 import pl.bliw.emulator.memory.StackMemory;
 import pl.bliw.gui.MainWindowController;
@@ -19,7 +20,12 @@ public class Chip8MainConfiguration {
 
     @Bean
     public Chip8 chip8() {
-        return new Chip8(cpu(), memory(), screen(), keyboard(), timers(), performanceCounter());
+        return new Chip8(cpu(), memory(), screen(), keyboard(), timers(), performanceCounter(), sound());
+    }
+
+    @Bean
+    public Sound sound() {
+        return new Sound();
     }
 
     @Bean
