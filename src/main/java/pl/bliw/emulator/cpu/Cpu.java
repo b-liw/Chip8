@@ -174,7 +174,7 @@ public class Cpu {
                             for (int xOffset = 0; xOffset < BITS_IN_BYTE; xOffset++) {
                                 int currentPixel = (currentLineOfSprite >> BITS_IN_BYTE - xOffset - 1) & 1;
                                 if (currentPixel == 1) {
-                                    int newOffsetInScreenBuffer = (xSpriteCoord + xOffset) + (ySpriteCoord + yOffset) * Screen.getWidth();
+                                    int newOffsetInScreenBuffer = ((xSpriteCoord + xOffset) % Screen.getWidth()) + ((ySpriteCoord + yOffset) % Screen.getHeight()) * Screen.getWidth();
                                     if (newOffsetInScreenBuffer < Screen.getWidth() * Screen.getHeight()) {
                                         if (screen.getPixel(newOffsetInScreenBuffer)) {
                                             registers.set(VF, 1);
@@ -242,7 +242,7 @@ public class Cpu {
                         case 0x0065:
                             return () -> {
                                 int x = extract0X00(opcode);
-                                for (int i = 0; i < x; i++) {
+                                for (int i = 0; i <= x; i++) {
                                     registers.set(i, memory.read(registers.getI() + 1));
                                 }
                                 registers.setI(registers.getI() + x + 1);
