@@ -243,7 +243,7 @@ public class Cpu {
                             return () -> {
                                 int x = extract0X00(opcode);
                                 for (int i = 0; i <= x; i++) {
-                                    registers.set(i, memory.read(registers.getI() + 1));
+                                    registers.set(i, memory.read(registers.getI() + i));
                                 }
                                 registers.setI(registers.getI() + x + 1);
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
