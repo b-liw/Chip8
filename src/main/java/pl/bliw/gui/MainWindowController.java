@@ -44,7 +44,7 @@ public class MainWindowController {
     public void initialize() {
         gc = canvas.getGraphicsContext2D();
         new Thread(() -> {
-            chip.initialize(Constants.PONG_CHIP_8_DEFAULT_ROM_PATH);
+            chip.initialize(Constants.INVADERS_CHIP_8_DEFAULT_ROM_PATH);
         }).start();
         long delay = ((long) (Constants.EXPECTED_DELAY_IN_NANO_SECONDS / Constants.NANO_SECONDS_FACTOR * Constants.MILI_SECONDS_FACTOR));
         new Timer().schedule(new TimerTask() {

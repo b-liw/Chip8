@@ -10,6 +10,7 @@ public class Constants {
     public static final double MILI_SECONDS_FACTOR = Math.pow(10, 3);
     public static final double NANO_SECONDS_FACTOR = Math.pow(10, 9);
     public static final String PONG_CHIP_8_DEFAULT_ROM_PATH = "./pong.chip8";
+    public static final String INVADERS_CHIP_8_DEFAULT_ROM_PATH = "./invaders.chip8";
     public static final double EXPECTED_FPS = 120.0;
     public static final long EXPECTED_DELAY_IN_NANO_SECONDS = (long) ((1 / EXPECTED_FPS) * NANO_SECONDS_FACTOR);
     public static final char CHIP8_FONTSET[] =
