@@ -43,6 +43,7 @@ public class Chip8 implements Runnable {
 
     public void initialize(String romPath) {
         try {
+            isRunning = true;
             loadProgramIntoMemory(romPath);
             loadFontset();
             threadExecutor = Executors.newScheduledThreadPool(1);
@@ -71,7 +72,6 @@ public class Chip8 implements Runnable {
             sound.beep();
         }
 //        log.info(String.format("\r FPS: %d, UPS: %d ", performanceCounter.getFPS(), performanceCounter.getUPS()));
-
     }
 
     public void loadProgramIntoMemory(String path) throws IOException {
