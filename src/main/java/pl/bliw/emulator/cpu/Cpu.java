@@ -51,7 +51,8 @@ public class Cpu {
                     switch (extract00NN(opcode)) {
                         case 0x00E0:
                             return () -> {
-                                System.exit(0);
+                                screen.clear();
+                                registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x00EE:
                             return () -> {
@@ -118,6 +119,11 @@ public class Cpu {
                                 registers.set(x, vx & vy);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
+                        case 0x0003:
+                            return () -> {
+                                registers.set(extract0X00(opcode), registers.get(extract0X00(opcode) ^ registers.get(extract00Y0(opcode))));
+                                registers.incrementPC(DEFAULT_OPCODE_LENGTH);
+                            };
                         case 0x0004:
                             return () -> {
                                 int x = extract0X00(opcode);
@@ -146,7 +152,15 @@ public class Cpu {
                                 registers.set(x, result & 0xFF);
                                 registers.incrementPC(DEFAULT_OPCODE_LENGTH);
                             };
+                        case 0x0006:
+                            return () -> {
+                                int x = extract0X00(opcode);
+                                int vx = registers.get(x);
+                                registers.set(VF, vx & 1);
+                                registers.set(x, vx >> 1);
+                                registers.incrementPC(DEFAULT_OPCODE_LENGTH);
 
+                            };
                         default:
                             throw new IllegalArgumentException();
                     }
@@ -215,6 +229,18 @@ public class Cpu {
                                 registers.set(extract0X00(opcode), timers.getDelayTimer());
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
+                        case 0x000a:
+                            return () -> {
+                                boolean[] keys = keyboard.getKeys();
+                                for (int i = 0; i < keys.length; i++) {
+                                    if (keys[i]) {
+                                        registers.set(extract0X00(opcode), i);
+                                        registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
+                                        break;
+                                    }
+                                }
+
+                            };
                         case 0x0015:
                             return () -> {
                                 timers.setDelayTimer(registers.get(extract0X00(opcode)));
@@ -225,20 +251,36 @@ public class Cpu {
                                 timers.setSoundTimer(registers.get(extract0X00(opcode)));
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
+                        case 0x001e:
+                            return () -> {
+                                int x = extract0X00(opcode);
+                                registers.setI(registers.getI() + registers.get(x));
+                                registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
+                            };
                         case 0x0029:
                             return () -> {
-                                int x = registers.get(extract0X00(opcode));
-                                registers.setI(Constants.FONT_SET_OFFSET_IN_MEMORY + x * 5);
+                                int vx = registers.get(extract0X00(opcode));
+                                registers.setI(Constants.FONT_SET_OFFSET_IN_MEMORY + vx * 5);
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
                         case 0x0033:
                             return () -> {
-                                int x = registers.get(extract0X00(opcode));
-                                memory.write(registers.getI() + 2, x % 10); // BCD code
-                                memory.write(registers.getI() + 1, (x / 10) % 10);
-                                memory.write(registers.getI(), (x / 100) % 10);
+                                int vx = registers.get(extract0X00(opcode));
+                                memory.write(registers.getI() + 2, vx % 10); // BCD code
+                                memory.write(registers.getI() + 1, (vx / 10) % 10);
+                                memory.write(registers.getI(), (vx / 100) % 10);
                                 registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
                             };
+                        case 0x0055: {
+                            return () -> {
+                                int x = extract0X00(opcode);
+                                for (int i = 0; i <= x; i++) {
+                                    memory.write(registers.getI() + i, registers.get(i));
+                                }
+                                registers.setI(registers.getI() + x + 1);
+                                registers.incrementPC(Constants.DEFAULT_OPCODE_LENGTH);
+                            };
+                        }
                         case 0x0065:
                             return () -> {
                                 int x = extract0X00(opcode);
@@ -255,7 +297,7 @@ public class Cpu {
                     throw new IllegalArgumentException();
             }
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("NOT SUPPORTED OPCODE 0x" + Integer.toHexString((int) opcode));
+            throw new IllegalArgumentException("NOT SUPPORTED OPCODE 0x" + Integer.toHexString((int) opcode).toUpperCase());
         }
     }
 
