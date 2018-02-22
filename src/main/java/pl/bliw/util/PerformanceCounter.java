@@ -64,8 +64,7 @@ public class PerformanceCounter {
 
     /**
      * Returns FPS.
-     *
-     * @return frames per second
+     * @return frames per second.
      */
     public int getFPS() {
         return FPS;
@@ -73,7 +72,7 @@ public class PerformanceCounter {
 
     /**
      * Returns UPS.
-     * @return updates per second
+     * @return updates per second.
      */
     public int getUPS() {
         return UPS;
