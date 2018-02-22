@@ -62,8 +62,12 @@ public class Registers {
      * @param value new value for register.
      */
     public void set(AvailableRegisters register, int value) {
-        checkIfItIsUnsignedByteOrThrow(String.format("V%d", register.id), value);
-        registers[register.id] = value;
+        try {
+            checkIfItIsUnsignedByteOrThrow(String.format("V%d", register.id), value);
+            registers[register.id] = value;
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Incorrect register index");
+        }
     }
 
     /**
