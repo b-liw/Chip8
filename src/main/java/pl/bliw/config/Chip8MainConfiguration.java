@@ -15,6 +15,9 @@ import pl.bliw.emulator.memory.StackMemory;
 import pl.bliw.gui.MainWindowController;
 import pl.bliw.util.PerformanceCounter;
 
+/**
+ * The class contains source of bean definitions for Spring IoC container
+ */
 @Configuration
 public class Chip8MainConfiguration {
 
@@ -73,5 +76,4 @@ public class Chip8MainConfiguration {
     MainWindowController mainWindowController() {
         return new MainWindowController(chip8());
     }
-
 }
