@@ -1,9 +1,11 @@
 package pl.bliw.emulator.io;
 
-public class Screen {
+import pl.bliw.util.Constants;
 
-    private static final int WIDTH = 64;
-    private static final int HEIGHT = 32;
+
+public class Screen {
+    private static final int WIDTH = Constants.WIDTH;
+    private static final int HEIGHT = Constants.HEIGHT;
     private boolean[] screenState = new boolean[WIDTH * HEIGHT];
     private boolean canvasUpdated;
 
@@ -48,5 +50,4 @@ public class Screen {
             throw new IllegalArgumentException("Invalid offset in screen buffer");
         }
     }
-
 }
