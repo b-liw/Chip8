@@ -20,20 +20,48 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The MainWindowController handles user input and interactions with main window.
+ */
 public class MainWindowController {
-
+    /**
+     * The logger to this class.
+     */
     private static Logger log = Logger.getLogger(MainWindowController.class.getName());
+
+    /**
+     * The main Chip8 instance.
+     */
     private Chip8 chip;
+
+    /**
+     * The graphics context used for drawing on canvas.
+     */
     private GraphicsContext gc;
+
+    /**
+     * The thread executor used for starting new threads.
+     */
     private ScheduledExecutorService threadExecutor;
 
+    /**
+     * The reference to the canvas from main window.
+     */
     @FXML
     private Canvas canvas;
 
+    /**
+     * Constructs new controller for main window.
+     *
+     * @param chip8 instance of chip8
+     */
     public MainWindowController(Chip8 chip8) {
         this.chip = chip8;
     }
 
+    /**
+     * The method redraws canvas using chip8 internal screen buffer.
+     */
     public void drawCanvas() {
         Screen screen = chip.getScreen();
         boolean[] screenState = screen.getScreenState();
@@ -46,6 +74,9 @@ public class MainWindowController {
         }
     }
 
+    /**
+     * The method initializes main controller after creation.
+     */
     @FXML
     public void initialize() {
         gc = canvas.getGraphicsContext2D();
@@ -71,6 +102,9 @@ public class MainWindowController {
         }
     }
 
+    /**
+     * Starts chip8 in new thread
+     */
     private void runChipInAnotherThread() {
         Service<Void> service = new Service<Void>() {
             @Override
@@ -102,16 +136,28 @@ public class MainWindowController {
         service.start();
     }
 
+    /**
+     * Listener for pressed buttons
+     * @param event key event
+     */
     @FXML
     private void keyPressedListener(KeyEvent event) {
         chip.getKeyboard().keyPressed(event.getCode().getName());
     }
 
+    /**
+     * Listener for released buttons
+     * @param event key event
+     */
     @FXML
     private void keyReleasedListener(KeyEvent event) {
         chip.getKeyboard().keyReleased(event.getCode().getName());
     }
 
+    /**
+     * Returns the file path as string of file that can be selected using file chooser.
+     * @return file path
+     */
     private String getFilePathFromFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("SELECT ROM FILE");
@@ -122,5 +168,4 @@ public class MainWindowController {
             return "";
         }
     }
-
 }
