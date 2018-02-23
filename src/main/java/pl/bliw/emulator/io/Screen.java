@@ -9,12 +9,12 @@ public class Screen {
     /**
      * The width of screen.
      */
-    private static final int WIDTH = Constants.WIDTH;
+    private static final int WIDTH = Constants.STANDARD_CHIP8_SCREEN_WIDTH;
 
     /**
      * The height of screen.
      */
-    private static final int HEIGHT = Constants.HEIGHT;
+    private static final int HEIGHT = Constants.STANDARD_CHIP8_SCREEN_HEIGHT;
 
     /**
      * An array of state of every pixel. There are two possibilities. Pixel can be on or off (white or black).
