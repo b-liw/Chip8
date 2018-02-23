@@ -1,6 +1,6 @@
 # Chip8
 
-The Chip8 program emulates CHIP-8 and allows to
+The Chip8 program emulates [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) and allows to
 run the original machine code of programs which has been written for this virtual machine.
 
 ### Used technologies
