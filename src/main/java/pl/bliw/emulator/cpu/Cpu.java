@@ -14,16 +14,55 @@ import static pl.bliw.emulator.cpu.Registers.AvailableRegisters.VF;
 import static pl.bliw.util.Constants.BITS_IN_BYTE;
 import static pl.bliw.util.Constants.DEFAULT_OPCODE_LENGTH;
 
+/**
+ * The central processing unit of Chip8 allows to execute original machine code for this platform.
+ */
 public class Cpu {
-
+    /**
+     * The logger for this class.
+     */
     private static Logger log = Logger.getLogger(Cpu.class.getName());
+
+    /**
+     * The internal cpu registers.
+     */
     private Registers registers;
+
+    /**
+     * The reference to chip8 memory.
+     */
     private Memory memory;
+
+    /**
+     * The reference to chip8 stack memory.
+     */
     private StackMemory stackMemory;
+
+    /**
+     * The reference to chip8 screen.
+     */
     private Screen screen;
+
+    /**
+     * The reference to timers.
+     */
     private Timers timers;
+
+    /**
+     * The reference to chip8 keyboard.
+     */
     private Keyboard keyboard;
 
+    /**
+     * Constructs cpu.
+     *
+     * @param registers   registers
+     * @param memory      memory module
+     * @param stackMemory stack memory module
+     * @param screen      screen
+     * @param timers      timers
+     * @param keyboard    keyboard
+     */
     public Cpu(Registers registers, Memory memory, StackMemory stackMemory, Screen screen, Timers timers, Keyboard keyboard) {
         this.registers = registers;
         this.memory = memory;
@@ -33,26 +72,37 @@ public class Cpu {
         this.keyboard = keyboard;
     }
 
+    /**
+     * The method fetches next opcode pointed by program counter register, decodes and executes it.
+     */
     public void run() {
         char opcode = fetchNextOpcode();
         Operation decodedOperation = decode(opcode);
         execute(decodedOperation);
     }
 
+    /**
+     * Fetches next opcode from memory.
+     * @return next opcode
+     */
     private char fetchNextOpcode() {
         return (char) (memory.read(registers.getPC()) << 8 | memory.read(registers.getPC() + 1));
     }
 
+    /**
+     * Decodes given opcode.
+     * https://en.wikipedia.org/wiki/CHIP-8#Opcode_table
+     * NNN: address
+     * NN: 8-bit constant
+     * N: 4-bit constant
+     * X and Y: 4-bit register identifier
+     * PC : Program Counter
+     * I : 16bit register (For memory address)
+     *
+     * @param opcode
+     * @return Operation object which emulates given opcode
+     */
     private Operation decode(char opcode) {
-        /**
-         * // https://en.wikipedia.org/wiki/CHIP-8#Opcode_table
-         * NNN: address
-         * NN: 8-bit constant
-         * N: 4-bit constant
-         * X and Y: 4-bit register identifier
-         * PC : Program Counter
-         * I : 16bit register (For memory address)
-         */
         log.info(Integer.toHexString(opcode).toUpperCase());
         int x = extract0X00(opcode);
         int y = extract00Y0(opcode);
@@ -333,32 +383,65 @@ public class Cpu {
         }
     }
 
+    /**
+     * Executes given cpu operation
+     * @param operation
+     */
     private void execute(Operation operation) {
         operation.execute();
     }
 
+    /**
+     * Extracts the most significant 4 bits from given opcode.
+     * @param opcode operation code for chip8 platform
+     * @return the most significant 4 bits
+     */
     private int getInstructionID(char opcode) {
         return opcode & 0xF000;
     }
 
+    /**
+     * Extracts the least significant 12 bits from given opcode.
+     * @param opcode operation code for chip8 platform
+     * @return the most significant 12 bits
+     */
     private int extract0NNN(char opcode) {
         return opcode & 0x0FFF;
     }
 
+    /**
+     * Extracts third nibble from given opcode.
+     * @param opcode operation code for chip8 platform
+     * @return third nibble
+     */
     private int extract0X00(char opcode) {
         return (opcode & 0x0F00) >> 8;
     }
 
+    /**
+     * Extracts the least significant 8 bits from given opcode.
+     * @param opcode operation code for chip8 platform
+     * @return the least significant 8 bits
+     */
     private int extract00NN(char opcode) {
         return opcode & 0x00FF;
     }
 
+    /**
+     * Extracts the least significant 4 bits from given opcode.
+     * @param opcode operation code for chip8 platform
+     * @return the least significant 4 bits
+     */
     private int extract000N(char opcode) {
         return opcode & 0x000F;
     }
 
+    /**
+     * Extracts the second nibble from given opcode.
+     * @param opcode operation code for chip8 platform
+     * @return the second nibble
+     */
     private int extract00Y0(char opcode) {
         return (opcode & 0x00F0) >> 4;
     }
-
 }
