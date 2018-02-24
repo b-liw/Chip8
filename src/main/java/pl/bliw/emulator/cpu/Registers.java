@@ -53,7 +53,11 @@ public class Registers {
      * @return value from register.
      */
     public int get(int index) {
-        return registers[index] & 0xFF;
+        try {
+            return registers[index] & 0xFF;
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Incorrect register index");
+        }
     }
 
     /**
