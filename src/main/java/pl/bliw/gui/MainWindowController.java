@@ -64,7 +64,7 @@ public class MainWindowController {
      */
     public void drawCanvas() {
         Screen screen = chip.getScreen();
-        boolean[] screenState = screen.getScreenState();
+        Boolean[] screenState = screen.getScreenState();
         for (int i = 0; i < screenState.length; i++) {
             boolean b = screenState[i];
             gc.setFill(b ? Color.WHITE : Color.BLACK);
