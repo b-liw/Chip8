@@ -78,13 +78,14 @@ public class MainWindowController {
      * The method initializes main controller after creation.
      */
     @FXML
-    public void initialize() {
+    public void initialize() throws InterruptedException {
         gc = canvas.getGraphicsContext2D();
         canvas.requestFocus();
         String romPath = getFilePathFromFileChooser();
         if (!romPath.isEmpty()) {
             try {
                 chip.initialize(romPath);
+                Thread.sleep(Constants.ONE_SECOND);
                 runChipInAnotherThread();
             } catch (IOException e) {
                 String message = String.format("Error occurred during opening rom file with specified path: %s%n%s", romPath, e.getMessage());

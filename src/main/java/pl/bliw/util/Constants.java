@@ -111,4 +111,9 @@ public class Constants {
      * The error dialog title.
      */
     public static final String ERROR_INFO = "ERROR";
+
+    /**
+     * A one second in milliseconds.
+     */
+    public static final long ONE_SECOND = 1000;
 }
