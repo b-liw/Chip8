@@ -3,15 +3,16 @@ package pl.bliw.emulator.memory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class MemoryTest {
-
     private Memory memory;
     private int tooLargeOffset;
     private int negativeOffset = -1;
     private int exampleCorrectByte = 0x40;
-    private int[] exampleValues = new int[]{10, 200, 50, 90, 100, 21, 33};
+    private short[] exampleValues = new short[]{10, 200, 50, 90, 100, 21, 33};
 
     @Before
     public void before() {
@@ -25,7 +26,7 @@ public class MemoryTest {
             memory.write(i, exampleValues[i]);
         }
         for (int i = 0; i < exampleValues.length; i++) {
-            assertEquals(exampleValues[i], memory.read(i));
+            assertThat(exampleValues[i], is(equalTo(memory.read(i))));
         }
     }
 
@@ -48,5 +49,4 @@ public class MemoryTest {
     public void writeMemoryShouldThrowExceptionWhenOffsetIsNegative() {
         memory.write(negativeOffset, exampleCorrectByte);
     }
-
 }

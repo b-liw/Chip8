@@ -10,7 +10,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class StackMemoryTest {
-
     private static final int TEST_STACK_SIZE = 5;
     private StackMemory stack;
 
@@ -53,5 +52,4 @@ public class StackMemoryTest {
         assertEquals(30, stack.pop());
         assertEquals(20, stack.pop());
     }
-
 }
