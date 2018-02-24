@@ -19,12 +19,21 @@ public class Screen {
     /**
      * An array of state of every pixel. There are two possibilities. Pixel can be on or off (white or black).
      */
-    private boolean[] screenState = new boolean[WIDTH * HEIGHT];
+    private Boolean[] screenState = new Boolean[WIDTH * HEIGHT];
 
     /**
      * Flag indicates if canvas has been updated, and if there is needed redraw.
      */
     private boolean canvasUpdated;
+
+    /**
+     * Constructs new screen object and sets state of every pixel in buffer to false
+     */
+    public Screen() {
+        for (int i = 0; i < screenState.length; i++) {
+            screenState[i] = Boolean.FALSE;
+        }
+    }
 
     /**
      * @return screen width.
@@ -63,7 +72,7 @@ public class Screen {
     /**
      * @return An array with state of every pixel.
      */
-    public boolean[] getScreenState() {
+    public Boolean[] getScreenState() {
         return screenState;
     }
 
